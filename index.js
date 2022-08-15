@@ -14,7 +14,7 @@ canvas.height = 576;
 c.fillStyle = 'salmon'
 c.fillRect(0, 0,canvas.width, canvas.height);
 
-const gravity = 0.2;
+let gravity = 0.2;
 
 class Sprite {
   // Every class needs a constructor, is triggered everytime an instance of class is called
@@ -37,12 +37,15 @@ class Sprite {
   // Updates sprites position
   update() {
     this.draw();
-    this.velocity += gravity;
     // Update vertical position
     this.position.y += this.velocity.y;
     // y co-ordinates on canvas start at top. The canvas height ends at the bottom
+    // if sprites are off canvas
     if (this.position.y + this.height + this.velocity.y >= canvas.height) {
       this.velocity.y = 0;
+      // if sprites are still on canvas
+    } else {
+      this.velocity.y += gravity;
     }
   }
 }
@@ -84,4 +87,24 @@ function animate() {
 
 animate();
 
-console.log(player)
+// Add event listener to move sprites
+window.addEventListener('keydown', (event) => {
+
+  if (event.key === 'd') {
+    player.position.x += 10;
+  }
+
+  if (event.key === 'a') {
+    player.position.x -= 10;
+  }
+
+  if (event.key === 'ArrowRight') {
+    enemy.position.x += 10;
+  }
+
+  if (event.key === 'ArrowLeft') {
+    enemy.position.x -= 10;
+  }
+
+
+})
