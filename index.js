@@ -14,6 +14,8 @@ canvas.height = 576;
 c.fillStyle = 'salmon'
 c.fillRect(0, 0,canvas.width, canvas.height);
 
+const gravity = 0.2;
+
 class Sprite {
   // Every class needs a constructor, is triggered everytime an instance of class is called
   // Creating property within a class constructor, must be prefaced with 'this'
@@ -21,20 +23,27 @@ class Sprite {
   // Velocity has x and y (2 dimensional, left/right & up/down )
   constructor({position, velocity}) {
     this.position = position;
-    this.velocity = velocity
+    this.velocity = velocity;
+    this.height = 150;
   }
 
   // Arbitrarily named, can be named whatever
   draw() {
     // Color must be defined BEFORE marking its position
     c.fillStyle = 'honeydew'
-    c.fillRect(this.position.x, this.position.y, 50, 150);
+    c.fillRect(this.position.x, this.position.y, 50, this.height );
   }
 
   // Updates sprites position
   update() {
     this.draw();
-    this.position.y += 10
+    this.velocity += gravity;
+    // Update vertical position
+    this.position.y += this.velocity.y;
+    // y co-ordinates on canvas start at top. The canvas height ends at the bottom
+    if (this.position.y + this.height + this.velocity.y >= canvas.height) {
+      this.velocity.y = 0;
+    }
   }
 }
 // New instance of Spirte class, starting position is 0, 0
@@ -57,7 +66,7 @@ const enemy  = new Sprite({
   },
   velocity: {
     x: 0,
-    y: 0
+    y: 10
   }
 });
 
