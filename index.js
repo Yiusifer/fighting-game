@@ -39,6 +39,8 @@ class Sprite {
     this.draw();
     // Update vertical position
     this.position.y += this.velocity.y;
+    // Update horizontal position
+    this.position.x += this.velocity.x;
     // y co-ordinates on canvas start at top. The canvas height ends at the bottom
     // if sprites are off canvas
     if (this.position.y + this.height + this.velocity.y >= canvas.height) {
@@ -91,20 +93,37 @@ animate();
 window.addEventListener('keydown', (event) => {
 
   if (event.key === 'd') {
-    player.position.x += 10;
+    player.velocity.x = 10;
   }
 
   if (event.key === 'a') {
-    player.position.x -= 10;
+    player.velocity.x = -10;
   }
 
   if (event.key === 'ArrowRight') {
-    enemy.position.x += 10;
+    enemy.velocity.x = 10;
   }
 
   if (event.key === 'ArrowLeft') {
-    enemy.position.x -= 10;
+    enemy.velocity.x = -10;
+  }
+})
+
+window.addEventListener('keyup', (event) => {
+
+  if (event.key === 'd') {
+    player.velocity.x = 0;
   }
 
+  if (event.key === 'a') {
+    player.velocity.x = 0;
+  }
 
+  if (event.key === 'ArrowRight') {
+    enemy.velocity.x = 0;
+  }
+
+  if (event.key === 'ArrowLeft') {
+    enemy.velocity.x = 0;
+  }
 })
