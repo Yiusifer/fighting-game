@@ -45,10 +45,12 @@ class Sprite {
     // if sprites are off canvas
     if (this.position.y + this.height + this.velocity.y >= canvas.height) {
       this.velocity.y = 0;
-      // if sprites are still on canvas
-    } else {
+    }
+    // if sprites are still on canvas
+     if (this.position.y + this.height + this.velocity.y < canvas.height){
       this.velocity.y += gravity;
     }
+
   }
 }
 // New instance of Spirte class, starting position is 0, 0
@@ -75,9 +77,28 @@ const enemy  = new Sprite({
   }
 });
 
+const keys = {
+  a: {
+    pressed: false
+  },
+  d: {
+    pressed: false
+  },
+  ArrowLeft: {
+    pressed: false
+  },
+  ArrowRight: {
+    pressed: false
+  }
+};
+
+// Allows for more accurate movement tracking (i.e. if d is held down, then a is held while d is still held down)
+let lastKeyPressed = "";
+
 // Adding gravity
 // Creating an infinite loop to animate frame by frame
 function animate() {
+
   window.requestAnimationFrame(animate);
   c.fillStyle = 'salmon'
   // Prevents 'paint' effect
@@ -85,6 +106,23 @@ function animate() {
   // Draw is already called in update
   player.update();
   enemy.update();
+
+  player.velocity.x = 0;
+  enemy.velocity.x = 0;
+
+  if (keys.a.pressed === true && lastKeyPressed === 'a') {
+    player.velocity.x = -1;
+  }
+  if (keys.d.pressed === true && lastKeyPressed === 'd') {
+    player.velocity.x = 1;
+  }
+  if (keys.ArrowLeft.pressed === true && lastKeyPressed === 'ArrowLeft') {
+    enemy.velocity.x = -1;
+  }
+  if (keys.ArrowRight.pressed === true && lastKeyPressed === 'ArrowRight') {
+    enemy.velocity.x = 1;
+  }
+
 }
 
 animate();
@@ -92,38 +130,42 @@ animate();
 // Add event listener to move sprites
 window.addEventListener('keydown', (event) => {
 
-  if (event.key === 'd') {
-    player.velocity.x = 10;
+  if (event.key === 'a') {
+    keys.a.pressed = true;
+    lastKeyPressed = 'a';
   }
 
-  if (event.key === 'a') {
-    player.velocity.x = -10;
+  if (event.key === 'd') {
+    keys.d.pressed = true;
+    lastKeyPressed = 'd'
   }
 
   if (event.key === 'ArrowRight') {
-    enemy.velocity.x = 10;
+    keys.ArrowRight.pressed = true;
+    lastKeyPressed = 'ArrowRight'
   }
 
   if (event.key === 'ArrowLeft') {
-    enemy.velocity.x = -10;
+    keys.ArrowLeft.pressed = true;
+    lastKeyPressed = 'ArrowLeft';
   }
 })
 
 window.addEventListener('keyup', (event) => {
 
   if (event.key === 'd') {
-    player.velocity.x = 0;
+    keys.d.pressed = false
   }
 
   if (event.key === 'a') {
-    player.velocity.x = 0;
+    keys.a.pressed = false
   }
 
   if (event.key === 'ArrowRight') {
-    enemy.velocity.x = 0;
+    keys.ArrowRight.pressed = false
   }
 
   if (event.key === 'ArrowLeft') {
-    enemy.velocity.x = 0;
+    keys.ArrowLeft.pressed = false
   }
 })
