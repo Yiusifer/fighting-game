@@ -45,9 +45,8 @@ class Sprite {
     // if sprites are off canvas
     if (this.position.y + this.height + this.velocity.y >= canvas.height) {
       this.velocity.y = 0;
-    }
-    // if sprites are still on canvas
-     if (this.position.y + this.height + this.velocity.y < canvas.height){
+    } else {
+      // if sprites are still on canvas
       this.velocity.y += gravity;
     }
 
@@ -62,7 +61,7 @@ const player = new Sprite({
   },
   velocity: {
     x: 0,
-    y: 0
+    y: 10
   }
 });
 
@@ -84,12 +83,18 @@ const keys = {
   d: {
     pressed: false
   },
+  w: {
+    pressed: false
+  },
   ArrowLeft: {
     pressed: false
   },
   ArrowRight: {
     pressed: false
-  }
+  },
+  ArrowUp: {
+    pressed: false
+  },
 };
 
 // Allows for more accurate movement tracking (i.e. if d is held down, then a is held while d is still held down)
@@ -110,6 +115,7 @@ function animate() {
   player.velocity.x = 0;
   enemy.velocity.x = 0;
 
+
   if (keys.a.pressed === true && lastKeyPressed === 'a') {
     player.velocity.x = -1;
   }
@@ -122,7 +128,6 @@ function animate() {
   if (keys.ArrowRight.pressed === true && lastKeyPressed === 'ArrowRight') {
     enemy.velocity.x = 1;
   }
-
 }
 
 animate();
@@ -137,7 +142,13 @@ window.addEventListener('keydown', (event) => {
 
   if (event.key === 'd') {
     keys.d.pressed = true;
-    lastKeyPressed = 'd'
+    lastKeyPressed = 'd';
+  }
+
+  if (event.key === 'w') {
+    keys.w.pressed = true;
+    lastKeyPressed = 'w';
+    player.velocity.y = -10
   }
 
   if (event.key === 'ArrowRight') {
@@ -149,6 +160,12 @@ window.addEventListener('keydown', (event) => {
     keys.ArrowLeft.pressed = true;
     lastKeyPressed = 'ArrowLeft';
   }
+
+  if (event.key === 'ArrowUp') {
+    keys.ArrowUp.pressed = true;
+    lastKeyPressed = 'ArrowUp';
+    enemy.velocity.y = -10
+  }
 })
 
 window.addEventListener('keyup', (event) => {
@@ -156,16 +173,19 @@ window.addEventListener('keyup', (event) => {
   if (event.key === 'd') {
     keys.d.pressed = false
   }
-
   if (event.key === 'a') {
     keys.a.pressed = false
   }
-
+  if (event.key === 'w') {
+    keys.ArrowLeft.pressed = false
+  }
   if (event.key === 'ArrowRight') {
     keys.ArrowRight.pressed = false
   }
-
   if (event.key === 'ArrowLeft') {
+    keys.ArrowLeft.pressed = false
+  }
+  if (event.key === 'ArrowUp') {
     keys.ArrowLeft.pressed = false
   }
 })
