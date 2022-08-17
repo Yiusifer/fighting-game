@@ -25,6 +25,8 @@ class Sprite {
     this.position = position;
     this.velocity = velocity;
     this.height = 150;
+    // Allows for more accurate movement tracking (i.e. if d is held down, then a is held while d is still held down)
+    this.lastKeyPressed = "";
   }
 
   // Arbitrarily named, can be named whatever
@@ -43,14 +45,16 @@ class Sprite {
     this.position.x += this.velocity.x;
     // y co-ordinates on canvas start at top. The canvas height ends at the bottom
     // if sprites are off canvas
-    if (this.position.y + this.height + this.velocity.y >= canvas.height) {
+    if (this.position.y + this.height >= canvas.height ) {
       this.velocity.y = 0;
-    } else {
-      // if sprites are still on canvas
+    }
+    // if sprites are still on canvas
+     if (this.position.y + this.height <= canvas.height) {
       this.velocity.y += gravity;
     }
-
   }
+
+
 }
 // New instance of Spirte class, starting position is 0, 0
 // Velocity is default at 0, 0. Means character will not move by default
@@ -97,8 +101,8 @@ const keys = {
   },
 };
 
-// Allows for more accurate movement tracking (i.e. if d is held down, then a is held while d is still held down)
-let lastKeyPressed = "";
+
+
 
 // Adding gravity
 // Creating an infinite loop to animate frame by frame
@@ -116,54 +120,55 @@ function animate() {
   enemy.velocity.x = 0;
 
 
-  if (keys.a.pressed === true && lastKeyPressed === 'a') {
+  if (keys.a.pressed === true && player.lastKeyPressed === 'a') {
     player.velocity.x = -1;
   }
-  if (keys.d.pressed === true && lastKeyPressed === 'd') {
+  if (keys.d.pressed === true && player.lastKeyPressed === 'd') {
     player.velocity.x = 1;
   }
-  if (keys.ArrowLeft.pressed === true && lastKeyPressed === 'ArrowLeft') {
+  if (keys.ArrowLeft.pressed === true && enemy.lastKeyPressed === 'ArrowLeft') {
     enemy.velocity.x = -1;
   }
-  if (keys.ArrowRight.pressed === true && lastKeyPressed === 'ArrowRight') {
+  if (keys.ArrowRight.pressed === true && enemy.lastKeyPressed === 'ArrowRight') {
     enemy.velocity.x = 1;
   }
 }
 
 animate();
 
+
 // Add event listener to move sprites
 window.addEventListener('keydown', (event) => {
 
   if (event.key === 'a') {
     keys.a.pressed = true;
-    lastKeyPressed = 'a';
+    player.lastKeyPressed = 'a';
   }
 
   if (event.key === 'd') {
     keys.d.pressed = true;
-    lastKeyPressed = 'd';
+    player.lastKeyPressed = 'd';
   }
 
-  if (event.key === 'w') {
+  if (event.key === 'w' && player.position.y >= 0) {
     keys.w.pressed = true;
-    lastKeyPressed = 'w';
-    player.velocity.y = -10
+    player.lastKeyPressed = 'w';
+    player.velocity.y = -10;
   }
 
   if (event.key === 'ArrowRight') {
     keys.ArrowRight.pressed = true;
-    lastKeyPressed = 'ArrowRight'
+    enemy.lastKeyPressed = 'ArrowRight';
   }
 
   if (event.key === 'ArrowLeft') {
     keys.ArrowLeft.pressed = true;
-    lastKeyPressed = 'ArrowLeft';
+    enemy.lastKeyPressed = 'ArrowLeft';
   }
 
   if (event.key === 'ArrowUp') {
     keys.ArrowUp.pressed = true;
-    lastKeyPressed = 'ArrowUp';
+    enemy.lastKeyPressed = 'ArrowUp';
     enemy.velocity.y = -10
   }
 })
