@@ -14,7 +14,7 @@ canvas.height = 576;
 c.fillStyle = 'salmon'
 c.fillRect(0, 0, canvas.width, canvas.height);
 
-let gravity = 0.7;
+let gravity = 0.5;
 
 class Sprite {
   // Every class needs a constructor, is triggered everytime an instance of class is called
@@ -35,6 +35,8 @@ class Sprite {
     };
     // Allows for more accurate movement tracking (i.e. if d is held down, then a is held while d is still held down)
     this.lastKeyPressed = "";
+
+    this.isAttacking = false;
   }
 
   // Arbitrarily named, can be named whatever
@@ -64,6 +66,13 @@ class Sprite {
     if (this.position.y + this.height < canvas.height) {
       this.velocity.y += gravity;
     }
+  }
+
+  attack() {
+    this.isAttacking = true;
+    setTimeout(() => {
+      this.isAttacking = false;
+    }, 100)
   }
 }
 // New instance of Spirte class, starting position is 0, 0
@@ -148,7 +157,8 @@ function animate() {
     (player.attackBox.position.x + player.attackBox.width) >= enemy.position.x &&
     player.position.x < enemy.position.x + enemy.width &&
     // y-axis
-    player.position.y === enemy.position.y
+    player.position.y === enemy.position.y &&
+    player.isAttacking
   ) {
     console.log('Player has hit enemy')
   }
@@ -176,6 +186,10 @@ window.addEventListener('keydown', (event) => {
     player.velocity.y = -20;
   }
 
+  if (event.key === ' ') {
+    player.attack();
+  }
+
   if (event.key === 'ArrowRight') {
     keys.ArrowRight.pressed = true;
     enemy.lastKeyPressed = 'ArrowRight';
@@ -190,6 +204,10 @@ window.addEventListener('keydown', (event) => {
     keys.ArrowUp.pressed = true;
     enemy.lastKeyPressed = 'ArrowUp';
     enemy.velocity.y = -20
+  }
+
+  if (event.key === '/') {
+    enemy.attack();
   }
 })
 
