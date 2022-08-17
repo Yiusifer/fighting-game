@@ -25,6 +25,7 @@ class Sprite {
     this.position = position;
     this.velocity = velocity;
     this.height = 150;
+    this.width = 50;
     this.color = color;
     this.attackBox = {
       // Attack box follows the sprite's location
@@ -40,7 +41,7 @@ class Sprite {
   draw() {
     // Color must be defined BEFORE marking its position
     c.fillStyle = this.color
-    c.fillRect(this.position.x, this.position.y, 50, this.height );
+    c.fillRect(this.position.x, this.position.y, this.width, this.height );
 
     // Draw attack box
     c.fillStyle = 'purple'
@@ -64,8 +65,6 @@ class Sprite {
       this.velocity.y += gravity;
     }
   }
-
-
 }
 // New instance of Spirte class, starting position is 0, 0
 // Velocity is default at 0, 0. Means character will not move by default
@@ -131,16 +130,23 @@ function animate() {
 
 
   if (keys.a.pressed === true && player.lastKeyPressed === 'a') {
-    player.velocity.x = -1;
+    player.velocity.x = -10;
   }
   if (keys.d.pressed === true && player.lastKeyPressed === 'd') {
-    player.velocity.x = 1;
+    player.velocity.x = 10;
   }
   if (keys.ArrowLeft.pressed === true && enemy.lastKeyPressed === 'ArrowLeft') {
-    enemy.velocity.x = -1;
+    enemy.velocity.x = -10;
   }
   if (keys.ArrowRight.pressed === true && enemy.lastKeyPressed === 'ArrowRight') {
-    enemy.velocity.x = 1;
+    enemy.velocity.x = 10;
+  }
+
+  // Detect for collision
+  if (
+    (player.attackBox.position.x + player.attackBox.width) >= enemy.position.x &&
+    player.position.x < enemy.position.x + enemy.width ) {
+    console.log('Player has hit enemy')
   }
 }
 
