@@ -12,16 +12,16 @@ canvas.height = 576;
 // Select canvas context, use canvas API
 // .fillRect() has four arguments: x-position, y-position, reactangle's width
 c.fillStyle = 'salmon'
-c.fillRect(0, 0,canvas.width, canvas.height);
+c.fillRect(0, 0, canvas.width, canvas.height);
 
-let gravity = 0.2;
+let gravity = 0.7;
 
 class Sprite {
   // Every class needs a constructor, is triggered everytime an instance of class is called
   // Creating property within a class constructor, must be prefaced with 'this'
   // Passing it in as an object will not require a specific parameter order when creating an instance
   // Velocity has x and y (2 dimensional, left/right & up/down )
-  constructor({position, velocity, color}) {
+  constructor({ position, velocity, color }) {
     this.position = position;
     this.velocity = velocity;
     this.height = 150;
@@ -41,7 +41,7 @@ class Sprite {
   draw() {
     // Color must be defined BEFORE marking its position
     c.fillStyle = this.color
-    c.fillRect(this.position.x, this.position.y, this.width, this.height );
+    c.fillRect(this.position.x, this.position.y, this.width, this.height);
 
     // Draw attack box
     c.fillStyle = 'purple'
@@ -57,11 +57,11 @@ class Sprite {
     this.position.x += this.velocity.x;
     // y co-ordinates on canvas start at top. The canvas height ends at the bottom
     // if sprites are off canvas
-    if (this.position.y + this.height >= canvas.height ) {
+    if (this.position.y + this.height >= canvas.height) {
       this.velocity.y = 0;
     }
     // if sprites are still on canvas
-     if (this.position.y + this.height <= canvas.height) {
+    if (this.position.y + this.height < canvas.height) {
       this.velocity.y += gravity;
     }
   }
@@ -80,7 +80,7 @@ const player = new Sprite({
   color: 'green'
 });
 
-const enemy  = new Sprite({
+const enemy = new Sprite({
   position: {
     x: 500,
     y: 0
@@ -144,8 +144,12 @@ function animate() {
 
   // Detect for collision
   if (
+    // x-axis check
     (player.attackBox.position.x + player.attackBox.width) >= enemy.position.x &&
-    player.position.x < enemy.position.x + enemy.width ) {
+    player.position.x < enemy.position.x + enemy.width &&
+    // y-axis
+    player.position.y === enemy.position.y
+  ) {
     console.log('Player has hit enemy')
   }
 }
@@ -169,7 +173,7 @@ window.addEventListener('keydown', (event) => {
   if (event.key === 'w' && player.position.y >= 0) {
     keys.w.pressed = true;
     player.lastKeyPressed = 'w';
-    player.velocity.y = -10;
+    player.velocity.y = -20;
   }
 
   if (event.key === 'ArrowRight') {
@@ -185,7 +189,7 @@ window.addEventListener('keydown', (event) => {
   if (event.key === 'ArrowUp') {
     keys.ArrowUp.pressed = true;
     enemy.lastKeyPressed = 'ArrowUp';
-    enemy.velocity.y = -10
+    enemy.velocity.y = -20
   }
 })
 
